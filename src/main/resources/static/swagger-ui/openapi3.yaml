@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: Payment Service
+  description: Order/Payment API
+  version: 0.1.0
+servers:
+- url: https://localhost:8080
+tags: []
+paths:
+  /api/v1/orders/new:
+    post:
+      tags:
+      - api
+      operationId: CorrectRequestMessage
+      requestBody:
+        content:
+          application/json;charset=UTF-8:
+            schema:
+              $ref: "#/components/schemas/api-v1-orders-new67537023"
+            examples:
+              CorrectRequestMessage:
+                value: "{\"orderer\":{\"name\":\"해피쿠\",\"phoneNumber\":\"010-1234-1234\"\
+                  },\"newlyOrderedItem\":[{\"itemIdx\":1,\"productId\":\"dd84c3f3-b58c-4c06-bf02-33e8ed31eed6\"\
+                  ,\"productName\":\"사리곰탕\",\"price\":1500,\"quantity\":1,\"amounts\"\
+                  :1500}]}"
+      responses:
+        "200":
+          description: "200"
+components:
+  schemas:
+    api-v1-orders-new67537023:
+      type: object
+      properties:
+        newlyOrderedItem:
+          type: array
+          items:
+            type: object
+            properties:
+              quantity:
+                type: number
+                description: 주문 수량
+              amounts:
+                type: number
+                description: 주문 상품 총 가격(상품 단일 가격 * 주문 수량)
+              productId:
+                type: string
+                description: 상품 ID
+              price:
+                type: number
+                description: 상품 단일 가격
+              itemIdx:
+                type: number
+                description: 상세 주문 번호
+              productName:
+                type: string
+                description: 상품명
+        orderer:
+          type: object
+          properties:
+            phoneNumber:
+              type: string
+              description: 주문자 휴대전화 번호
+            name:
+              type: string
+              description: 주문자명
