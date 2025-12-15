@@ -16,7 +16,7 @@ Kafka를 활용한 DDD 기반 E-Commerce 결제 서비스
 - [docker] 29.1.1
 - [kafka] 7.3.10
 - [zookeeper] 7.3.10
-- [mysql] 6.0.16
+- [mysql] 8.0.33
 
 ![Overal_Architecture](images/1.png)
 

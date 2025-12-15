@@ -1,0 +1,92 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.10
+    container_name: ps-zookeeper
+    ports:
+      - "22181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      default_bridge:
+        ipv4_address: 172.26.0.11
+
+  kafka-1:
+    image: confluentinc/cp-kafka:7.3.10
+    container_name: ps-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "19092:19092"
+      - "19094:19094"
+    environment:
+      KAFKA_BROKER_ID: 1
+      #      내부와 외부 네트워크를 구분하기 위한 보안 설정
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      #      위에서 설정한 Listener 에 맞게 IP 와 Port 지정
+      KAFKA_LISTENERS: INTERNAL://kafka-1:19092,EXTERNAL://kafka-1:19094
+      #      요청 IP와 Port를 통해서 Kafka는 Listener를 구분하고, Client에게 적절한 IpAddr:Port 를 선택 후 반환
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:19092,EXTERNAL://localhost:19094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPIC_ENABLE: false
+    networks:
+      default_bridge:
+        ipv4_address: 172.26.0.12
+
+  #  schema-registry:
+  #    image: confluentinc/cp-schema-registry:7.3.10
+  #    container_name: ps-kafka-schema-registry
+  #    ports:
+  #      - 8085:8085
+  #    depends_on:
+  #      - kafka-1
+  #    environment:
+  #      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka-1:19092'
+  #      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+  #      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8085'
+  #      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+  #    networks:
+  #      default_bridge:
+  #        ipv4_address: 172.26.0.13
+
+  mysql:
+    image: mysql:8.0.33
+    container_name: ps-mysql
+    ports:
+      - 13306:3306
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ~/study/docker/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=localroot
+      - MYSQL_DATABASE=ps
+      - MYSQL_USER=local
+      - MYSQL_PASSWORD=local
+    networks:
+      default_bridge:
+        ipv4_address: 172.26.0.14
+
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui:latest
+#    container_name: ps-kafka-ui
+#    depends_on:
+#      - kafka-1
+#    ports:
+#      - 8081:8080
+#    environment:
+#      - DYNAMIC_CONFIG_ENABLED=true
+#      - KAFKA_CLUSTERS_0_NAME=PS-Kafka
+#      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:19092
+
+networks:
+  default_bridge:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.26.0.0/16
+
