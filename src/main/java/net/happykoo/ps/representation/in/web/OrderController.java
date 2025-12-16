@@ -2,8 +2,8 @@ package net.happykoo.ps.representation.in.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.happykoo.ps.representation.request.order.PurchaseOrder;
-import net.happykoo.ps.representation.response.order.NewPurchaseOrder;
+import net.happykoo.ps.representation.in.web.request.order.PurchaseOrder;
+import net.happykoo.ps.representation.in.web.response.order.NewPurchaseOrder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package net.happykoo.ps.representation.request.order;
+package net.happykoo.ps.representation.in.web.request.order;
 
 import jakarta.validation.constraints.NotBlank;
 

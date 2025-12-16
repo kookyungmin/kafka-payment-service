@@ -7,9 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.UUID;
-import net.happykoo.ps.representation.request.order.Orderer;
-import net.happykoo.ps.representation.request.order.PurchaseOrder;
-import net.happykoo.ps.representation.request.order.PurchaseOrderItem;
+import net.happykoo.ps.representation.in.web.request.order.Orderer;
+import net.happykoo.ps.representation.in.web.request.order.PurchaseOrder;
+import net.happykoo.ps.representation.in.web.request.order.PurchaseOrderItem;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

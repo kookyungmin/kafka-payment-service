@@ -1,4 +1,4 @@
-package net.happykoo.ps.representation.response.order;
+package net.happykoo.ps.representation.in.web.response.order;
 
 import java.util.UUID;
 import net.happykoo.ps.domain.order.OrderStatus;
