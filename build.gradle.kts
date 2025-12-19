@@ -42,11 +42,17 @@ dependencies {
 	//MySql
 	runtimeOnly("com.mysql:mysql-connector-j")
 
+	//Retrofit
+	implementation("com.squareup.retrofit2:retrofit:2.10.0")
+	implementation("com.squareup.retrofit2:converter-jackson:2.10.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.10.0")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0")
+	implementation("com.google.code.gson:gson")
+
 	//Rest Docs
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
 	testImplementation("com.epages:restdocs-api-spec-mockmvc:0.17.1")
-
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
