@@ -15,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum OrderStatus {
+  ORDER_READY("00"),
   ORDER_COMPLETED("01"),
   ORDER_CANCELLED("02"),
-  PAYMENT_FULLFILL("03"),
+  PAYMENT_FULFILL("03"),
   SHIPPING_PREPARE("04"),
   SHIPPING("05"),
   SHIPPING_COMPLETED("06"),

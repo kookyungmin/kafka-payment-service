@@ -1,0 +1,28 @@
+## 신규 주문
+POST http://localhost:8080/v1/orders/new
+Content-Type: application/json
+
+{
+  "orderer": {
+    "name": "홍길동",
+    "phoneNumber": "010-5678-1234"
+  },
+  "newlyOrderedItem": [
+    {
+      "itemIdx": 1,
+      "productId": "b1c2d3e4-f567-8901-2345-6789abcdef01",
+      "productName": "농심 짜파게티 4봉",
+      "price": 4500,
+      "quantity": 2,
+      "amounts": 9000
+    },
+    {
+      "itemIdx": 2,
+      "productId": "0f1e2d3c-4b5a-6978-9012-3456789abcde",
+      "productName": "콜라 500ml",
+      "price": 1800,
+      "quantity": 1,
+      "amounts": 1800
+    }
+  ]
+}

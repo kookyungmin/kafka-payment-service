@@ -1,6 +1,7 @@
 package net.happykoo.ps.representation.in.web;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 import net.happykoo.ps.representation.in.web.request.order.Orderer;
 import net.happykoo.ps.representation.in.web.request.order.PurchaseOrder;
 import net.happykoo.ps.representation.in.web.request.order.PurchaseOrderItem;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,15 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@ActiveProfiles("test")
 @ExtendWith(RestDocumentationExtension.class)
 public class OrderControllerDocTest {
 
@@ -35,6 +41,7 @@ public class OrderControllerDocTest {
   private ObjectMapper objectMapper;
 
   @Test
+  @DisplayName("GET /v1/orders/new 테스트 :: 성공한 경우")
   public void newOrderTest() throws Exception {
     Orderer orderer = new Orderer("해피쿠", "010-1234-1234");
     List<PurchaseOrderItem> orderItems = List.of(
@@ -42,7 +49,7 @@ public class OrderControllerDocTest {
     PurchaseOrder newOrder = new PurchaseOrder(orderer, orderItems);
 
     String requestJson = objectMapper.writeValueAsString(newOrder);
-    this.mockMvc.perform(RestDocumentationRequestBuilders.post("/api/v1/orders/new")
+    this.mockMvc.perform(RestDocumentationRequestBuilders.post("/v1/orders/new")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON)
             .content(requestJson))
@@ -76,5 +83,21 @@ public class OrderControllerDocTest {
         );
   }
 
+  @Test
+  @DisplayName("GET /v1/orders/new 테스트 :: 주문명이 비어서 실패한 경우")
+  public void newOrderValidTest() throws Exception {
+    PurchaseOrder newOrder = new PurchaseOrder(new Orderer("", "010-1234-1234"),
+        List.of(new PurchaseOrderItem(1, UUID.randomUUID(), "농심 짜파게티 4봉", 4500, 1, 4500)));
 
+    String requestJson = objectMapper.writeValueAsString(newOrder);
+    this.mockMvc.perform(RestDocumentationRequestBuilders.post("/v1/orders/new")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(requestJson))
+        .andExpect(status().is4xxClientError())
+        .andExpect(result -> assertInstanceOf(MethodArgumentNotValidException.class,
+            result.getResolvedException()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("ERROR"))
+        .andDo(document("ConstraintHasValueBlank"));
+  }
 }

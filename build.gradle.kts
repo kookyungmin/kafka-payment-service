@@ -49,6 +49,9 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0")
 	implementation("com.google.code.gson:gson")
 
+	//H2
+	testRuntimeOnly("com.h2database:h2")
+
 	//Rest Docs
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 	testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")

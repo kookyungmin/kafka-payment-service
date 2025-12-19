@@ -3,15 +3,15 @@ package net.happykoo.ps.infrastructure.out.pg.toss.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.happykoo.ps.infrastructure.out.pg.toss.response.payment.Cancel;
 import net.happykoo.ps.infrastructure.out.pg.toss.response.payment.method.Card;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class PaymentSettlementsResponse extends CommonPaymentResponse {

@@ -1,7 +1,9 @@
 package net.happykoo.ps.representation.in.web.common;
 
 import java.time.LocalDateTime;
+import lombok.Getter;
 
+@Getter
 public class ApiResponse<T> {
 
   private String status;
