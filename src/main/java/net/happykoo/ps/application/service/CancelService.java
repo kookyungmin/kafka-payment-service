@@ -1,5 +1,6 @@
 package net.happykoo.ps.application.service;
 
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import net.happykoo.ps.application.port.in.PaymentCancelUseCase;
 import net.happykoo.ps.application.port.out.api.PaymentApis;
@@ -48,5 +49,7 @@ public class CancelService implements PaymentCancelUseCase {
         order.cancelAll();
       }
     }
+
+    throw new IOException("Cancel Request Failed");
   }
 }
