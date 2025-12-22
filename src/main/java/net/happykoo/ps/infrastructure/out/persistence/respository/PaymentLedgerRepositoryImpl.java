@@ -1,5 +1,6 @@
 package net.happykoo.ps.infrastructure.out.persistence.respository;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.happykoo.ps.application.port.out.persistence.PaymentLedgerRepository;
@@ -19,7 +20,9 @@ public class PaymentLedgerRepositoryImpl implements PaymentLedgerRepository {
 
   @Override
   public PaymentLedger findOneByPaymentKeyDesc(String paymentKey) {
-    return null;
+    return jpaPaymentLedgerRepository.findTopByPaymentKeyOrderByIdDesc(paymentKey)
+        .orElseThrow(
+            () -> new EntityNotFoundException("payment ledger does not exists : " + paymentKey));
   }
 
   @Override

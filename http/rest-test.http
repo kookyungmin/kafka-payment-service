@@ -42,3 +42,15 @@ Content-Type: application/json
 
 ### 결제 테스트
 GET http://localhost:8080/payment/checkout.html?orderId=22938d41-0fec-4a9c-befa-14d68f8803827&userId=rudals4549&ordererName=해피쿠&ordererPhoneNumber=01012341234&orderName=사리곰탕&amount=1500
+
+
+### 결제 취소 테스트
+
+POST http://localhost:8080/v1/payment/cancel
+Content-Type: application/json
+
+{
+  "orderId": "5facb1b7-2bd2-4de7-a748-82b6802cbf49",
+  "cancelReason": "단순 변심",
+  "cancellationAmount": 1500
+}

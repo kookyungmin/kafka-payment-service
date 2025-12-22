@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -72,6 +73,10 @@ public class Order {
     return status == OrderStatus.ORDER_COMPLETED;
   }
 
+  public boolean isPurchaseDecision() {
+    return status == OrderStatus.PURCHASE_DECISION;
+  }
+
   public void addItems(List<OrderItem> items) {
     this.items.addAll(items);
   }
@@ -97,5 +102,19 @@ public class Order {
 
   private boolean hasEmptyItem() {
     return items == null || items.isEmpty();
+  }
+
+  public void cancel(int[] itemIdxs) {
+    List<Integer> list = Arrays.stream(itemIdxs)
+        .boxed()
+        .toList();
+    items.stream()
+        .filter(item -> list.contains(item.getItemIdx()))
+        .forEach(item -> item.cancel());
+  }
+
+  public void cancelAll() {
+    items.forEach(item -> item.cancel());
+    this.status = OrderStatus.ORDER_CANCELLED;
   }
 }
