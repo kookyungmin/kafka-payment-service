@@ -20,4 +20,6 @@ public interface PaymentApis {
 
   List<PaymentSettlementsResponse> requestPaymentSettlement(PaymentSettlement paymentSettlement)
       throws IOException;
+
+  boolean isPaymentCanceled(String status);
 }

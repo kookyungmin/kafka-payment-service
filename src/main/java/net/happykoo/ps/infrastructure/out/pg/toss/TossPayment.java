@@ -64,4 +64,9 @@ public class TossPayment implements PaymentApis {
 
     throw new IOException(response.message());
   }
+
+  @Override
+  public boolean isPaymentCanceled(String status) {
+    return "CANCELED".equals(status);
+  }
 }

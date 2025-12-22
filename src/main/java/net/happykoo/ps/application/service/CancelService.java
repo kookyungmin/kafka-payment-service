@@ -39,12 +39,14 @@ public class CancelService implements PaymentCancelUseCase {
     PaymentCancelResponse response = paymentApis.requestPaymentCancel(order.getPaymentId(),
         new PaymentCancel(cancelOrder.cancelReason(), cancellationAmount));
 
-    paymentLedgerRepository.save(response.toEntity());
+    if (paymentApis.isPaymentCanceled(response.getStatus())) {
+      paymentLedgerRepository.save(response.toEntity());
 
-    if (cancelOrder.hasItemIdx()) {
-      order.cancel(cancelOrder.itemIdxs());
-    } else {
-      order.cancelAll();
+      if (cancelOrder.hasItemIdx()) {
+        order.cancel(cancelOrder.itemIdxs());
+      } else {
+        order.cancelAll();
+      }
     }
   }
 }
