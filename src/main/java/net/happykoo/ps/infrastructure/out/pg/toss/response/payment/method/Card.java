@@ -35,7 +35,7 @@ public class Card {
   private String number;
   private String cardType;
   private String acquireStatus;
-  private String approvedNo;
+  private String approveNo;
   private int amount;
   private boolean isInterestFree;
   private String receiptUrl;

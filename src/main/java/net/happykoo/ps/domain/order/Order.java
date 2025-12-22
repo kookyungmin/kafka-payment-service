@@ -68,6 +68,19 @@ public class Order {
     this.status = OrderStatus.ORDER_COMPLETED;
   }
 
+  public boolean isCompleted() {
+    return status == OrderStatus.ORDER_COMPLETED;
+  }
+
+  public void addItems(List<OrderItem> items) {
+    this.items.addAll(items);
+  }
+
+  public void paymentFulfill(String paymentKey) {
+    this.paymentId = paymentKey;
+    this.status = OrderStatus.PAYMENT_FULFILL;
+  }
+
   private int calculateTotalAmount() {
     return items.stream()
         .map(OrderItem::calculateAmount)
@@ -84,9 +97,5 @@ public class Order {
 
   private boolean hasEmptyItem() {
     return items == null || items.isEmpty();
-  }
-
-  public void addItems(List<OrderItem> items) {
-    this.items.addAll(items);
   }
 }

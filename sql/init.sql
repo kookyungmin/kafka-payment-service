@@ -53,6 +53,8 @@ create table card_payment (
     issuer_code varchar(255) null comment '카드 발급사 코드',
     acquirer_code varchar(255) not null comment '카드 매입사 코드',
     acquirer_status varchar(255) not null comment '카드 결제의 상태', -- 일단 결제 OK인지 확인만 한 단계
+    created_at datetime not null,
+    updated_at datetime not null,
     primary key (payment_id),
     unique key(payment_id, card_number, approve_no)
 )
