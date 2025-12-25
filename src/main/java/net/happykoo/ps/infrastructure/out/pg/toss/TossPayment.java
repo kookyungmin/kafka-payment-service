@@ -13,7 +13,7 @@ import net.happykoo.ps.representation.in.web.request.payment.PaymentSettlement;
 import org.springframework.stereotype.Component;
 import retrofit2.Response;
 
-@Component
+@Component("tossPayment")
 @RequiredArgsConstructor
 public class TossPayment implements PaymentApis {
 

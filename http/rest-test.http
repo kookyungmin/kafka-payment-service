@@ -54,3 +54,7 @@ Content-Type: application/json
   "cancelReason": "단순 변심",
   "cancellationAmount": 1500
 }
+
+### 결제 정산 테스트
+
+POST http://localhost:8080/v1/settlements

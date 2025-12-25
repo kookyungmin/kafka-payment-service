@@ -1,7 +1,6 @@
 package net.happykoo.ps.application.service;
 
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
 import net.happykoo.ps.application.port.in.PaymentCancelUseCase;
 import net.happykoo.ps.application.port.out.api.PaymentApis;
 import net.happykoo.ps.application.port.out.persistence.OrderRepository;
@@ -11,16 +10,24 @@ import net.happykoo.ps.domain.payment.PaymentLedger;
 import net.happykoo.ps.infrastructure.out.pg.toss.response.PaymentCancelResponse;
 import net.happykoo.ps.representation.in.web.request.order.CancelOrder;
 import net.happykoo.ps.representation.in.web.request.payment.PaymentCancel;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class CancelService implements PaymentCancelUseCase {
 
   private final PaymentApis paymentApis;
   private final OrderRepository orderRepository;
   private final PaymentLedgerRepository paymentLedgerRepository;
+
+  public CancelService(@Qualifier("tossPayment") PaymentApis paymentApis,
+      OrderRepository orderRepository,
+      PaymentLedgerRepository paymentLedgerRepository) {
+    this.paymentApis = paymentApis;
+    this.orderRepository = orderRepository;
+    this.paymentLedgerRepository = paymentLedgerRepository;
+  }
 
   @Transactional
   @Override
@@ -48,8 +55,8 @@ public class CancelService implements PaymentCancelUseCase {
       } else {
         order.cancelAll();
       }
+    } else {
+      throw new IOException("Cancel Request Failed");
     }
-
-    throw new IOException("Cancel Request Failed");
   }
 }

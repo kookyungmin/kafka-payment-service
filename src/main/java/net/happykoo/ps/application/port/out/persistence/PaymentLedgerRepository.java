@@ -10,4 +10,6 @@ public interface PaymentLedgerRepository {
   PaymentLedger findOneByPaymentKeyDesc(String paymentKey);
 
   void save(PaymentLedger paymentLedger);
+
+  void bulkInsert(List<PaymentLedger> paymentLedgers);
 }

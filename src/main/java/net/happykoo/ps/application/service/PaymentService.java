@@ -3,7 +3,6 @@ package net.happykoo.ps.application.service;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 import net.happykoo.ps.application.port.in.PaymentFulfillUseCase;
 import net.happykoo.ps.application.port.out.api.PaymentApis;
 import net.happykoo.ps.application.port.out.persistence.OrderRepository;
@@ -13,11 +12,11 @@ import net.happykoo.ps.domain.order.Order;
 import net.happykoo.ps.domain.payment.PaymentMethod;
 import net.happykoo.ps.infrastructure.out.pg.toss.response.PaymentApprovedResponse;
 import net.happykoo.ps.representation.in.web.request.payment.PaymentApproved;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class PaymentService implements PaymentFulfillUseCase {
 
   private final PaymentApis paymentApis;
@@ -25,6 +24,16 @@ public class PaymentService implements PaymentFulfillUseCase {
   private final PaymentLedgerRepository paymentLedgerRepository;
   //모든 TransactionTypeRepository 빈 Set 으로 주입 됨
   private final Set<TransactionTypeRepository> transactionTypeRepositorySet;
+
+  public PaymentService(@Qualifier("tossPayment") PaymentApis paymentApis,
+      OrderRepository orderRepository,
+      PaymentLedgerRepository paymentLedgerRepository,
+      Set<TransactionTypeRepository> transactionTypeRepositorySet) {
+    this.paymentApis = paymentApis;
+    this.orderRepository = orderRepository;
+    this.paymentLedgerRepository = paymentLedgerRepository;
+    this.transactionTypeRepositorySet = transactionTypeRepositorySet;
+  }
 
 
   @Override

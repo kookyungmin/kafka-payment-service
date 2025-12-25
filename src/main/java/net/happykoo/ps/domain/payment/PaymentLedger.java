@@ -39,6 +39,7 @@ public class PaymentLedger {
   private PaymentStatus paymentStatus;
 
   private int totalAmount;
+  private int payOutAmount;
   private int balanceAmount; //정산되지 않은 남아있는 금액
 
   private int canceledAmount; //취소 금액

@@ -57,6 +57,23 @@ create table card_payment (
     updated_at datetime not null,
     primary key (payment_id),
     unique key(payment_id, card_number, approve_no)
-)
+);
+
+alter table payment_transaction add column pay_out_amount int not null comment '결제 정산 금액 (수수료 제외)';
 
 
+
+create table payment_settlements (
+     id int not null comment '거래 ID' auto_increment,
+     payment_id varchar(255) not null comment '거래 번호(ID)',
+     method varchar(255) not null comment '거래 수단',
+     settlements_status varchar(255) not null comment '정산 상태',
+     total_amount int not null comment '최종 결제 금액 (즉시 할인 금액 포함)',
+     canceled_amount int not null comment '취소된 총 금액',
+     pay_out_amount int not null comment '결제 정산 금액 (수수료 제외)',
+     sold_date datetime not null comment '판매일',
+     paid_out_date datetime not null comment '정산일',
+
+     primary key (id),
+     unique key(payment_id, method, settlements_status)
+);
