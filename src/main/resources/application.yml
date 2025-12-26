@@ -20,6 +20,13 @@ spring:
         show_sql: true       # 쿼리 로그 출력
         jdbc:
           time_zone: Asia/Seoul
+  jdbc:
+    template:
+      batch-size: 100
+  kafka:
+    bootstrap-servers: [ "localhost:19094" ]
+    group-id: "settlements_1"
+    schema-registry-url: "http://localhost:8085"
 logging:
   level:
     org:

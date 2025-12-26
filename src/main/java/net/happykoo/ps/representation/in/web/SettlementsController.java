@@ -3,6 +3,7 @@ package net.happykoo.ps.representation.in.web;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import net.happykoo.ps.application.port.in.FetchPaymentSettlementUseCase;
+import net.happykoo.ps.application.port.in.ProduceSettlementsInfoUseCase;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,10 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class SettlementsController {
 
   private final FetchPaymentSettlementUseCase fetchPaymentSettlementUseCase;
+  private final ProduceSettlementsInfoUseCase produceSettlementsInfoUseCase;
 
   @PostMapping
   public void fetchSettlements() throws IOException {
     fetchPaymentSettlementUseCase.fetch();
+  }
+
+  @PostMapping("/produce")
+  public void produceSettlements() throws Exception {
+    produceSettlementsInfoUseCase.send();
   }
 
 }

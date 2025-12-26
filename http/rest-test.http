@@ -58,3 +58,7 @@ Content-Type: application/json
 ### 결제 정산 테스트
 
 POST http://localhost:8080/v1/settlements
+
+### 결제 정산 테스트 (카프카 이용)
+
+POST http://localhost:8080/v1/settlements/produce

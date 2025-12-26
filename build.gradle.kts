@@ -6,6 +6,8 @@ plugins {
 	id("com.epages.restdocs-api-spec") version "0.17.1"
 	// OpenAPI 3 Spec을 기반으로 Swagger UI 생성
 	id("org.hidetake.swagger.generator") version "2.18.2"
+	// AVRO
+	id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
 }
 
 group = "net.happykoo"
@@ -26,6 +28,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url = uri("https://packages.confluent.io/maven")
+	}
 }
 
 dependencies {
@@ -49,6 +54,11 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0")
 	implementation("com.google.code.gson:gson")
 
+	// Kafka Client
+	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.apache.avro:avro:1.11.3")
+	implementation("io.confluent:kafka-avro-serializer:7.0.1")
+
 	//H2
 	testRuntimeOnly("com.h2database:h2")
 
@@ -63,6 +73,13 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask> {
+	fieldVisibility = "PRIVATE"
+	setCreateSetters("false")
+	setSource("src/main/avro")
+	setOutputDir(file("build/generated-sources"))
 }
 
 openapi3 {

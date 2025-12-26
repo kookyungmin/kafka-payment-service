@@ -6,41 +6,53 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import net.happykoo.ps.application.port.in.FetchPaymentSettlementUseCase;
+import net.happykoo.ps.application.port.in.ProduceSettlementsInfoUseCase;
 import net.happykoo.ps.application.port.out.api.PaymentApis;
+import net.happykoo.ps.application.port.out.mq.Producer;
 import net.happykoo.ps.application.port.out.persistence.PaymentLedgerRepository;
 import net.happykoo.ps.application.port.out.persistence.PaymentSettlementsRepository;
 import net.happykoo.ps.domain.settlements.PaymentSettlements;
+import net.happykoo.ps.infrastructure.out.mq.record.RPaymentSettlements;
+import net.happykoo.ps.infrastructure.out.mq.record.Settlements;
 import net.happykoo.ps.infrastructure.out.pg.toss.response.PaymentSettlementsResponse;
 import net.happykoo.ps.representation.in.web.request.payment.PaymentSettlement;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SettlementsService implements FetchPaymentSettlementUseCase {
+public class SettlementsService implements FetchPaymentSettlementUseCase,
+    ProduceSettlementsInfoUseCase {
+
+  private final static String SETTLEMENTS_TOPIC = "settlements";
 
   private final PaymentApis paymentApis;
   private final PaymentSettlementsRepository paymentSettlementsRepository;
   private final PaymentLedgerRepository paymentLedgerRepository;
 
+  private final Producer<RPaymentSettlements> producer;
+
   public SettlementsService(@Qualifier("mockPayment") PaymentApis paymentApis,
       PaymentSettlementsRepository paymentSettlementsRepository,
-      PaymentLedgerRepository paymentLedgerRepository) {
+      PaymentLedgerRepository paymentLedgerRepository,
+      Producer<RPaymentSettlements> producer) {
     this.paymentApis = paymentApis;
     this.paymentSettlementsRepository = paymentSettlementsRepository;
     this.paymentLedgerRepository = paymentLedgerRepository;
+    this.producer = producer;
   }
 
+  //Kafka Consumer 로 대체
   @Override
   public void fetch() throws IOException {
-    List<PaymentSettlements> settlements = paymentApis.requestPaymentSettlement(
+    List<PaymentSettlements> paymentSettlements = paymentApis.requestPaymentSettlement(
             createPaymentSettlement())
         .stream()
         .map(PaymentSettlementsResponse::toEntity)
         .toList();
 
-    paymentSettlementsRepository.bulkInsert(settlements);
+    paymentSettlementsRepository.bulkInsert(paymentSettlements);
     paymentLedgerRepository.bulkInsert(
-        settlements
+        paymentSettlements
             .stream()
             .map(PaymentSettlements::toPaymentLedgerEntity).toList());
 
@@ -56,5 +68,32 @@ public class SettlementsService implements FetchPaymentSettlementUseCase {
         .page(1)
         .size(5000)
         .build();
+  }
+
+  @Override
+  public void send() throws Exception {
+    List<PaymentSettlements> paymentSettlements = paymentApis.requestPaymentSettlement(
+            createPaymentSettlement())
+        .stream()
+        .map(PaymentSettlementsResponse::toEntity)
+        .toList();
+    RPaymentSettlements record = RPaymentSettlements.newBuilder()
+        .setSettlements(paymentSettlements
+            .stream()
+            .map(ps ->
+                Settlements.newBuilder()
+                    .setId(ps.getId())
+                    .setPaymentKey(ps.getPaymentKey())
+                    .setTotalAmount(ps.getTotalAmount())
+                    .setPayOutAmount(ps.getPayOutAmount())
+                    .setCanceledAmount(ps.getCanceledAmount())
+                    .setMethod(ps.getMethod().toString())
+                    .setSoldDate((int) ps.getSoldDate().toEpochDay())
+                    .setPaidOutDate((int) ps.getPaidOutDate().toEpochDay())
+                    .build()
+            )
+            .toList())
+        .build();
+    producer.send(SETTLEMENTS_TOPIC, record);
   }
 }

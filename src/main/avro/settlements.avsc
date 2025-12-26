@@ -1,0 +1,55 @@
+{
+  "namespace": "net.happykoo.ps.infrastructure.out.mq.record",
+  "type": "record",
+  "name": "RPaymentSettlements",
+  "fields": [
+    {
+      "name": "settlements",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Settlements",
+          "type": "record",
+          "fields": [
+            {
+              "name": "id",
+              "type": ["null", "long"],
+              "default": null
+            },
+            {
+              "name": "paymentKey",
+              "type": "string"
+            },
+            {
+              "name": "method",
+              "type": "string"
+            },
+            {
+              "name": "totalAmount",
+              "type": "int"
+            },
+            {
+              "name": "canceledAmount",
+              "type": "int"
+            },
+            {
+              "name": "payOutAmount",
+              "type": "int"
+            },
+            {
+              "name": "soldDate",
+              "type": "int",
+              "logicalType": "date"
+            },
+            {
+              "name": "paidOutDate",
+              "type": "int",
+              "logicalType": "date"
+            }
+          ]
+        }
+      }
+
+    }
+  ]
+}
